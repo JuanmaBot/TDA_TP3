@@ -1,0 +1,18 @@
+# Demostrar que el Problema de la Batalla Naval es, en efecto, un problema NP-Completo
+
+## Se puede usar 3-Partition
+* Se toma los valores del 3-Partition
+* Crear una matriz M de 3 filas y Sum(valores) columnas mas una columna por cada “medio”
+    * osea si es [3,3,4] seria 3+3+4+2(por cada coma)
+* las columnas tienen demanda 1 y las que representan las comas tienen demanda 0 y las filas tienen demanda Sum/3
+* los valores Vi se transforman en barcos de ese tamaño Vi
+* Si es posible que la batalla naval resuelva esto es que hay forma de dividir todo en 3 partes
+* La transformacion es polinomial pq es la version unaria que los valores estan representados por 1s por lo tanto no es pseudo polinomial
+    * osea un 3 es (1,1,1)
+## Demostración
+
+Si hay 3-Partition para un set V de elementos, entonces hay solución para para el juego de batalla naval construido:
+Si hay 3-Partition entonces hay forma de dividir los elementos de V en partes iguales de valor S = Sum(V)/3, por lo tanto se cumplirían las demandas de valor S de las filas. El 3-P le da cada elemento a una sola de las partes, por lo tanto también se cumplieron las demandas de las columnas. Que haya una columna con demanda 0 por cada espacio entre valores hace que se cumplan las restricciones de adyacencia. Como todas las restricciones se cumplen, hay solución para esta batalla naval.
+
+Si hay solución para la batalla naval, hay 3-Partition para los valores de V:
+Si hay solución para la batalla naval, significa que los barcos están dispuestos de forma tal que en cada fila hay S = Sum(V)/3 casilleros ocupados por barcos y donde solo hay un casillero ocupado por columna, significando que no hay superposición de barcos en las columnas. Cada espacio o set de columnas entre 2 columnas nulas (Demanda 0) representa un valor de V, por lo tanto esta solución implica que hay forma de dividir a todos los barcos/Valores en 3 partes iguales sin darle el mismo barco/valor a 2 partes distintas, por lo que significa que hay solución para el 3-Partition.
