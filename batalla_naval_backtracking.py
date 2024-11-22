@@ -121,8 +121,8 @@ def batalla_naval_bt(n: int, m: int, row_demand: list[int], col_demand: list[int
         return best_solution['board'], best_solution['unmet']
     
     # === Poda 1: Si la demanda actual ya es peor que la mejor encontrada === #
-    if current_unmet > best_solution['unmet']:
-        return best_solution['board'], best_solution['unmet']
+    # if current_unmet > best_solution['unmet']:
+    #     return best_solution['board'], best_solution['unmet']
     
     original_ships = ships.copy()
     while ships:
@@ -275,11 +275,43 @@ def obtener_adyacentes(board, i, j, ship, direction):
 # =========== Ejemplo de Uso =========== #
 
 if __name__ == "__main__":
+    # Ejemplo 3 3 2
+    n, m = 3,3
+    row_demand = [3,1,2]
+    col_demand = [3,2,0]
+    ships = [1,1]
+
+    # Ejemplo 5 5 6
+    n, m = 5,5
+    row_demand = [3,3,0,1,1]
+    col_demand = [3,1,0,3,3]
+    ships = [1,2,2,2,2,1]
+
+    # Ejemplo 8 7 10
+    n, m = 8,7
+    row_demand = [1,4,4,4,3,3,4,4]
+    col_demand = [6,5,3,0,6,3,3]
+    ships = [2,1,2,2,1,3,2,7,7,7]
+
+    # Ejemplo 10 3 3
+    n, m = 10,3
+    row_demand = [1,0,1,0,1,0,0,1,1,1]
+    col_demand = [1,4,3]
+    ships = [3,3,4]
+
+    # Ejemplo 10 10 10
     n, m = 10,10
     row_demand = [3,2,2,4,2,1,1,2,3,0]
     col_demand = [1,2,1,3,2,2,3,1,5,0]
-    total_demand = sum(row_demand) + sum(col_demand)
     ships = [4,3,3,2,2,2,1,1,1,1]
+
+    # Ejemplo 12 12 21
+    n, m = 12,12
+    row_demand = [3,6,1,2,3,6,5,2,0,3,0,3]
+    col_demand = [3,0,1,1,3,1,0,3,3,4,1,4]
+    ships = [4,3,7,4,3,2,2,5,5,5,4,4,5,5,7,6,4,1,7,4,4]
+
+    total_demand = sum(row_demand) + sum(col_demand)
 
     start_time = time.time()
     board, unmet = batalla_naval_bt(n, m, row_demand, col_demand, ships)
