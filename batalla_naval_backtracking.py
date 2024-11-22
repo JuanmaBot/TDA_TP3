@@ -171,6 +171,7 @@ def batalla_naval_bt(n: int, m: int, row_demand: list[int], col_demand: list[int
                 # Retroceso
                 quitar_barco(board, i, j, ship, direction, row_demand, col_demand)
         
+        # Si se pudo colocar el barco, no probar con los siguientes barcos. Salir del ciclo.
         if can_place:
             ships.append(ship)
             break
