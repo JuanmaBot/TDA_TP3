@@ -27,9 +27,10 @@ def verificador_batalla_naval(solucion, long_barcos, restricciones_col, restricc
     for t in tamanos: # O(barcos)
         if t not in barcos:
             return False
-        if barcos[t] == 1:
+        elif barcos[t] == 1:
             del barcos[t]
-        barcos[t] -= 1
+        else:
+            barcos[t] -= 1
 
     if len(barcos) != 0:
         return False
@@ -90,10 +91,10 @@ solucion = [
     [0,0,0,1,1,0,0,0,1,0],
     [0,0,0,0,0,0,0,0,0,0],
 ]
-l_barcos = [3,1,1,2,4,2,1,2,1,3]
-restricciones_filas = [3,2,2,4,2,1,1,2,3,0]
-restricciones_columnas = [1,2,1,3,2,2,3,1,5,0]
-print(verificador_batalla_naval(solucion,l_barcos,restricciones_columnas,restricciones_filas))
+# l_barcos = [3,1,1,2,4,2,1,2,1,3]
+# restricciones_filas = [3,2,2,4,2,1,1,2,3,0]
+# restricciones_columnas = [1,2,1,3,2,2,3,1,5,0]
+# print(verificador_batalla_naval(solucion,l_barcos,restricciones_columnas,restricciones_filas))
 
 
 """
