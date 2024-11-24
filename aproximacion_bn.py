@@ -1,16 +1,16 @@
 
-def meter_barco_en_col(tablero, barco, col, demandas_col, demandas_fil):
+def meter_barco_en_col(tablero, barco, col, demandas_col, demandas_fil): # O(Filas)
     "Mete el barco en la columna provista si encuentra un lugar valido"
     i = -1
     contador = 0
-    for f in range(len(tablero)):
+    for f in range(len(tablero)): # O(F)
         if tablero[f][col] + tablero[f][max(0,col-1)] + tablero[f][min(col+1,len(demandas_col)-1)] == 0 and demandas_fil[f] > 0:
             contador += 1
         else:
             contador = 0
             i = f+1
         if contador == barco + 2 or (i == 0 and contador == barco+1) or (f == len(tablero)-1 and contador == barco + 1):
-            for f in range(barco):
+            for f in range(barco): # O(b)
                 tablero[i+1][col] = 1
                 demandas_fil[i+1] -= 1
                 i += 1
@@ -18,7 +18,7 @@ def meter_barco_en_col(tablero, barco, col, demandas_col, demandas_fil):
             return True
     return False
 
-def meter_barco_en_fil(tablero, barco, fil, demandas_col, demandas_fil):
+def meter_barco_en_fil(tablero, barco, fil, demandas_col, demandas_fil): # O(Columnas)
     "Mete el barco en la fila provista si encuentra un lugar valido"
     
     i = -1
@@ -40,18 +40,18 @@ def meter_barco_en_fil(tablero, barco, fil, demandas_col, demandas_fil):
 
 
 def aproximacion_john_jellicoe(demandas_col: list,demandas_fil: list,long_barcos: list):
-    long_barcos.sort(reverse=True)
-    tablero = [[0 for c in range(len(demandas_col))] for f in range(len(demandas_fil))]
-    filas, columnas = list(range(len(demandas_fil))), list(range(len(demandas_col)))
+    long_barcos.sort(reverse=True) # O(B*log(B))
+    tablero = [[0 for c in range(len(demandas_col))] for f in range(len(demandas_fil))] # O(F*C)
+    filas, columnas = list(range(len(demandas_fil))), list(range(len(demandas_col))) # O(F + C)
     
-    while filas or columnas:
+    while filas or columnas: # O(Min(F+C, B))
         es_col = True
         max_dem, index = 0, 0
-        for f in filas:
+        for f in filas: # O(Filas)
             if demandas_fil[f] > max_dem:
                 max_dem, index = demandas_fil[f], f
                 es_col = False
-        for c in columnas:
+        for c in columnas: # O(Columnas)
             if demandas_col[c] > max_dem:
                 max_dem, index = demandas_col[c], c
                 es_col = True
@@ -59,14 +59,21 @@ def aproximacion_john_jellicoe(demandas_col: list,demandas_fil: list,long_barcos
             return tablero
         
         entro = False
-        for barco in long_barcos:
+        for barco in long_barcos: # O(Barcos)
             if barco > max_dem: 
                 continue
             
+            # O( Max(F,C) )
             entro = meter_barco_en_col(tablero, barco, index, demandas_col, demandas_fil) if es_col else meter_barco_en_fil(tablero, barco, index,demandas_col, demandas_fil)
+            
+            # O(Barcos)
             if entro:
-                long_barcos.remove(barco)
+                long_barcos.remove(barco) 
+                if len(long_barcos) == 0:
+                    return tablero
                 break
+
+        # O(Max(F,C))
         if not entro:
             if es_col:
                 columnas.remove(index)
