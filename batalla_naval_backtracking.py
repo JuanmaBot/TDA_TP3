@@ -30,41 +30,31 @@ def batalla_naval_bt(n: int, m: int, row_demand: list[int], col_demand: list[int
         return best_solution['board'], best_solution['unmet']
     
     # === Poda 1: Si la demanda actual ya es peor que la mejor encontrada === #
-    # if current_unmet >= best_solution['unmet']:
+    # if current_unmet > best_solution['unmet']:
     #     return best_solution['board'], best_solution['unmet']
     
     original_ships = ships.copy()
-    tried_ships = set()
-
-    while ships and len(tried_ships) < len(ships):
+    while ships:
         # Seleccionar el barco más grande restante
         ship = ships.pop()
-
-        print("Barco:", ship)
-        print("Demanda incumplida:", current_unmet)
-        print("Tablero:")
-        for row in board:
-            print(row)
-
-        if ship in tried_ships:
-            continue
+        can_place = False
         
-        tried_ships.add(ship)
+        # Encontrar fila/columna con mayor demanda
+        max_row_idx = max(range(n), key=lambda i: row_demand[i])
+        max_col_idx = max(range(m), key=lambda j: col_demand[j])
         
         # Probar todas las posiciones posibles, priorizando la mayor demanda
         positions = []
         
-        # Agregar todas las posiciones horizontales válidas
-        for i in range(n):
-            if row_demand[i] > 0:
-                for j in range(m - ship + 1):
-                    positions.append((i, j, "horizontal"))
+        # Agregar posiciones horizontales
+        if row_demand[max_row_idx] > 0:
+            positions.extend((max_row_idx, j, "horizontal") 
+                            for j in range(m - ship + 1))
         
-        # Agregar todas las posiciones verticales válidas
-        for j in range(m):
-            if col_demand[j] > 0:
-                for i in range(n - ship + 1):
-                    positions.append((i, j, "vertical"))
+        # Agregar posiciones verticales
+        if col_demand[max_col_idx] > 0:
+            positions.extend((i, max_col_idx, "vertical") 
+                            for i in range(n - ship + 1))
         
         # Ordenar posiciones por demanda total afectada
         def position_score(pos):
@@ -79,6 +69,8 @@ def batalla_naval_bt(n: int, m: int, row_demand: list[int], col_demand: list[int
         # Probar cada posición
         for i, j, direction in positions:
             if se_puede_colocar(board, i, j, ship, direction, row_demand, col_demand):
+                can_place = True
+
                 # Colocar barco
                 colocar_barco(board, i, j, ship, direction, row_demand, col_demand)
                 
@@ -87,6 +79,11 @@ def batalla_naval_bt(n: int, m: int, row_demand: list[int], col_demand: list[int
                 
                 # Retroceso
                 quitar_barco(board, i, j, ship, direction, row_demand, col_demand)
+        
+        # Si se pudo colocar el barco, no probar con los siguientes barcos. Salir del ciclo.
+        if can_place:
+            ships.append(ship)
+            break
 
     # Restaurar lista de barcos
     ships.clear()
@@ -205,19 +202,19 @@ if __name__ == "__main__":
     col_demand = [6,5,3,0,6,3,3]
     ships = [2,1,2,2,1,3,2,7,7,7]
 
-    # # Ejemplo 10 3 3
-    # n, m = 10,3
-    # row_demand = [1,0,1,0,1,0,0,1,1,1]
-    # col_demand = [1,4,3]
-    # ships = [3,3,4]
+    # Ejemplo 10 3 3
+    n, m = 10,3
+    row_demand = [1,0,1,0,1,0,0,1,1,1]
+    col_demand = [1,4,3]
+    ships = [3,3,4]
 
-    # # Ejemplo 10 10 10
-    # n, m = 10,10
-    # row_demand = [3,2,2,4,2,1,1,2,3,0]
-    # col_demand = [1,2,1,3,2,2,3,1,5,0]
-    # ships = [4,3,3,2,2,2,1,1,1,1]
+    # Ejemplo 10 10 10
+    n, m = 10,10
+    row_demand = [3,2,2,4,2,1,1,2,3,0]
+    col_demand = [1,2,1,3,2,2,3,1,5,0]
+    ships = [4,3,3,2,2,2,1,1,1,1]
 
-    # # Ejemplo 12 12 21
+    # Ejemplo 12 12 21
     # n, m = 12,12
     # row_demand = [3,6,1,2,3,6,5,2,0,3,0,3]
     # col_demand = [3,0,1,1,3,1,0,3,3,4,1,4]
