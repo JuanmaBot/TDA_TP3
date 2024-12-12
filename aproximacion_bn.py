@@ -163,4 +163,4 @@ def prueba_volumen_random(seed, n_col, n_fil, n_bar):
     print(f"El algoritmo aproximado pudo cubrir {demanda_cubierta2} de {demanda_total} de demanda total")
 
 
-prueba_volumen_random(42, 1000, 1000, 200)
+# prueba_volumen_random(42, 1000, 1000, 200)
