@@ -28,8 +28,8 @@ def medir_y_graficar_tiempos():
     algoritmos = [
         (aproximacion_john_jellicoe, "Aproximacion"),
         (aprox_mod, "Aproximacion_mod"),
-        # (batalla_naval_bt, "Backtracking"),
-        # (batalla_naval_lineal, "Lineal")
+        (batalla_naval_bt, "Backtracking"),
+        (batalla_naval_lineal, "Lineal")
     ]
     max_dim = 150
     demandas_col = [rd.randint(0, max_dim) for _ in range(max_dim)]
@@ -45,9 +45,6 @@ def medir_y_graficar_tiempos():
 
     # Variar columnas
     for cols in range(1, max_dim + 1):
-        # demandas_col = [rd.randint(0, max_dim) for _ in range(cols)]
-        # demandas_fil = [rd.randint(0, max_dim) for _ in range(cols)]
-        # long_barcos = [rd.randint(1, cols) for _ in range(max_dim)]
         
         for algoritmo, nombre in algoritmos:
             print(f"Probando {nombre} con {cols} columnas")
@@ -56,9 +53,6 @@ def medir_y_graficar_tiempos():
 
     # Variar barcos
     for barcos in range(1, max_dim + 1):
-        # demandas_col = [rd.randint(0, max_dim) for _ in range(max_dim)]
-        # demandas_fil = [rd.randint(0, max_dim) for _ in range(max_dim)]
-        # long_barcos = [rd.randint(1, max_dim) for _ in range(barcos)]
         
         for algoritmo, nombre in algoritmos:
             print(f"Probando {nombre} con {barcos} barcos")
