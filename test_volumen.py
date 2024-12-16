@@ -3,9 +3,10 @@ import time
 from aproximacion_bn import aproximacion_john_jellicoe
 from batalla_naval_backtracking import batalla_naval_bt
 from batalla_naval_lineal import batalla_naval_lineal
+import matplotlib.pyplot as plt
 
 # Configuración inicial
-SEED = "SUPER_RANDOM_SEED"
+SEED = 42
 rd.seed(SEED)
 
 # Función para medir el tiempo de ejecución de un algoritmo
@@ -20,45 +21,77 @@ def medir_tiempo(algoritmo, nombre, demandas_col, demandas_fil, long_barcos):
     duracion = time.time() - inicio
     return duracion, resultado
 
-# Función principal para ejecutar pruebas con volumen creciente
-def pruebas_volumen():
-    resultados = []
-    
-    # Tamaños crecientes para probar
-    tamaños = [(100, 100, 10), (500, 500, 50), (1000, 1000, 200)]
-    
-    for max_col, max_fil, max_bar in tamaños:
-        # Generar datos específicos para el tamaño
-        demandas_col = [rd.randint(0, max_fil) for _ in range(max_col)]
-        demandas_fil = [rd.randint(0, max_col) for _ in range(max_fil)]
-        long_barcos = [rd.randint(0, max(max_fil, max_col)) for _ in range(max_bar)]
-        
-        # Probar cada algoritmo
-        tiempos = {}
-        
-        for algoritmo, nombre in [
-            (aproximacion_john_jellicoe, "Aproximación"),
-            (batalla_naval_bt, "Backtracking"),
-            (batalla_naval_lineal, "Lineal")
-        ]:
-            duracion, _ = medir_tiempo(algoritmo, nombre, demandas_col, demandas_fil, long_barcos)
-            tiempos[nombre] = duracion
-        
-        # Guardar resultados
-        resultados.append({
-            "tamaño": (max_col, max_fil, max_bar),
-            "tiempos": tiempos
-        })
-    
-    return resultados
+def aprox_mod(demandas_col, demandas_fil, long_barcos):
+    return aproximacion_john_jellicoe(demandas_col, demandas_fil, long_barcos, True)
 
-# Ejecutar las pruebas
-resultados = pruebas_volumen()
+def medir_y_graficar_tiempos():
+    algoritmos = [
+        (aproximacion_john_jellicoe, "Aproximacion"),
+        (aprox_mod, "Aproximacion_mod"),
+        # (batalla_naval_bt, "Backtracking"),
+        # (batalla_naval_lineal, "Lineal")
+    ]
+    max_dim = 150
+    demandas_col = [rd.randint(0, max_dim) for _ in range(max_dim)]
+    demandas_fil = [rd.randint(0, max_dim) for _ in range(max_dim)]
+    long_barcos = [rd.randint(1, max_dim) for _ in range(max_dim)]
 
-# Imprimir resultados
-print("Resultados de las pruebas:")
-for resultado in resultados:
-    tamaño = resultado["tamaño"]
-    print(f"\nTamaño (Columnas: {tamaño[0]}, Filas: {tamaño[1]}, Barcos: {tamaño[2]})")
-    for nombre, tiempo in resultado["tiempos"].items():
-        print(f"  {nombre}: {tiempo:.4f} segundos")
+    print(demandas_col)
+    print(demandas_fil)
+    print(long_barcos)
+
+    resultados_tamanos = {alg[1]: [] for alg in algoritmos}
+    resultados_barcos = {alg[1]: [] for alg in algoritmos}
+
+    # Variar columnas
+    for cols in range(1, max_dim + 1):
+        # demandas_col = [rd.randint(0, max_dim) for _ in range(cols)]
+        # demandas_fil = [rd.randint(0, max_dim) for _ in range(cols)]
+        # long_barcos = [rd.randint(1, cols) for _ in range(max_dim)]
+        
+        for algoritmo, nombre in algoritmos:
+            print(f"Probando {nombre} con {cols} columnas")
+            duracion, _ = medir_tiempo(algoritmo, nombre, demandas_col[0:cols].copy(), demandas_fil[0:cols].copy(), long_barcos.copy())
+            resultados_tamanos[nombre].append(duracion)
+
+    # Variar barcos
+    for barcos in range(1, max_dim + 1):
+        # demandas_col = [rd.randint(0, max_dim) for _ in range(max_dim)]
+        # demandas_fil = [rd.randint(0, max_dim) for _ in range(max_dim)]
+        # long_barcos = [rd.randint(1, max_dim) for _ in range(barcos)]
+        
+        for algoritmo, nombre in algoritmos:
+            print(f"Probando {nombre} con {barcos} barcos")
+            duracion, _ = medir_tiempo(algoritmo, nombre, demandas_col.copy(), demandas_fil.copy(), long_barcos[0:barcos].copy())
+            resultados_barcos[nombre].append(duracion)
+
+    # Graficar resultados
+    x = list(range(1, max_dim + 1))
+
+    # Gráfico 1: Tiempo vs Tamaños
+    plt.figure(figsize=(10, 6))
+    for nombre, tiempos in resultados_tamanos.items():
+        plt.plot(x, tiempos, label=nombre)
+        plt.title("Tiempo vs Cantidad de Columnas")
+        plt.xlabel("Cantidad de Columnas")
+        plt.ylabel("Tiempo (s)")
+        plt.legend()
+        plt.grid()
+        plt.savefig(f"graficos/{nombre}/tiempo_vs_tam.png")
+        plt.close()
+
+    # Gráfico 2: Tiempo vs Barcos
+    plt.figure(figsize=(10, 6))
+    for nombre, tiempos in resultados_barcos.items():
+        plt.plot(x, tiempos, label=nombre)
+        plt.title("Tiempo vs Cantidad de Barcos")
+        plt.xlabel("Cantidad de Barcos")
+        plt.ylabel("Tiempo (s)")
+        plt.legend()
+        plt.grid()
+        plt.savefig(f"graficos/{nombre}/tiempo_vs_barcos.png")
+        plt.close()
+
+
+# Llamar a la función
+medir_y_graficar_tiempos()

@@ -148,19 +148,20 @@ def medir_aproximacion_a_optimos():
     mean = sum(rs)/len(rs)
     print(f"En promedio, se logró una aproximacion a los óptimos de {mean}")
 
-import random as rd
-def prueba_volumen_random(seed, n_col, n_fil, n_bar):
-    rd.seed(seed)
-    demandas_col = [rd.randint(0,n_fil) for _ in range(n_col)]
-    demandas_fil = [rd.randint(0,n_col) for _ in range(n_fil)]
-    long_barcos = [rd.randint(0,max(n_fil,n_col)) for _ in range(n_bar)]
-    solucion_aprox1 = aproximacion_john_jellicoe(demandas_col.copy(),demandas_fil.copy(),long_barcos.copy(),True)
-    solucion_aprox2 = aproximacion_john_jellicoe(demandas_col,demandas_fil,long_barcos,False)
-    demanda_cubierta1 = sum([sum(fila) for fila in solucion_aprox1])*2
-    demanda_cubierta2 = sum([sum(fila) for fila in solucion_aprox2])*2
-    demanda_total = sum(demandas_col) + sum(demandas_fil)
-    print(f"El algoritmo aproximado modificado pudo cubrir {demanda_cubierta1} de {demanda_total} de demanda total")
-    print(f"El algoritmo aproximado pudo cubrir {demanda_cubierta2} de {demanda_total} de demanda total")
+if __name__ == "__main__":
+    import random as rd
+    def prueba_volumen_random(seed, n_col, n_fil, n_bar):
+        rd.seed(seed)
+        demandas_col = [rd.randint(0,n_fil) for _ in range(n_col)]
+        demandas_fil = [rd.randint(0,n_col) for _ in range(n_fil)]
+        long_barcos = [rd.randint(0,max(n_fil,n_col)) for _ in range(n_bar)]
+        solucion_aprox1 = aproximacion_john_jellicoe(demandas_col.copy(),demandas_fil.copy(),long_barcos.copy(),True)
+        solucion_aprox2 = aproximacion_john_jellicoe(demandas_col,demandas_fil,long_barcos,False)
+        demanda_cubierta1 = sum([sum(fila) for fila in solucion_aprox1])*2
+        demanda_cubierta2 = sum([sum(fila) for fila in solucion_aprox2])*2
+        demanda_total = sum(demandas_col) + sum(demandas_fil)
+        print(f"El algoritmo aproximado modificado pudo cubrir {demanda_cubierta1} de {demanda_total} de demanda total")
+        print(f"El algoritmo aproximado pudo cubrir {demanda_cubierta2} de {demanda_total} de demanda total")
 
 
-# prueba_volumen_random(42, 1000, 1000, 200)
+    # prueba_volumen_random(42, 1000, 1000, 200)

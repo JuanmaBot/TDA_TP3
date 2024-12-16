@@ -1,6 +1,6 @@
 import time
 
-def batalla_naval_bt(n: int, m: int, row_demand: list[int], col_demand: list[int], ships: list, board=None, best_solution=None):
+def batalla_naval_bt(n: int, m: int, row_demand: list, col_demand: list, ships: list, board=None, best_solution=None):
     """
     Resuelve el problema de batalla naval usando backtracking con podas.
     Retorna el mejor tablero encontrado y su demanda incumplida.
